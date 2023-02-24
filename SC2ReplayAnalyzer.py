@@ -88,25 +88,63 @@ def findMatchUp(replay):
         elif player.pick_race == "Terran" and playerNumber == 1:
             firstRace = "Terran"
             playerNumber += 1
-    matchup = defineMatchup(firstRace, secondRace)
+    matchup = defineMatchup(firstRace, secondRace, replay)
         
     return matchup
 
-# Takes two race inputs and returns the matchup
-def defineMatchup(firstRace, secondRace):
+# Takes two race inputs and returns the matchup. Adds replay to matchup specific list
+def defineMatchup(firstRace, secondRace, replay):
     if (firstRace == "Zerg" and secondRace == "Terran") or (firstRace == "Terran" and secondRace == "Zerg"):
+        zvTMatches.append(replay)
+        determineWinningRaceZvT(replay)
         return "ZvT"
     if (firstRace == "Zerg" and secondRace == "Protoss") or (firstRace == "Protoss" and secondRace == "Zerg"):
+        zvPMatches.append(replay)
+        determineWinningRaceZvP(replay)
         return "ZvP"
     if (firstRace == "Terran" and secondRace == "Protoss") or (firstRace == "Protoss" and secondRace == "Terran"):
+        tvPMatches.append(replay)
+        determineWinningRaceTvP(replay)
         return "TvP"
     if (firstRace == "Terran" and secondRace == "Terran"):
+        tvTMatches.append(replay)
         return "TvT"
     if (firstRace == "Protoss" and secondRace == "Protoss"):
+        pvPMatches.append(replay)
         return "PvP"
     if (firstRace == "Zerg" and secondRace == "Zerg"):
+        zvZMatches.append(replay)
         return "ZvZ"
-        
+
+def determineWinningRaceZvT(replay):
+    global zvTZergWins
+    global zvTTerranWins
+    winner = replay.winner
+    if "(Zerg)" in str(winner):
+        zvTZergWins += 1
+    else:
+        zvTTerranWins += 1
+
+def determineWinningRaceZvP(replay):
+    global zvPZergWins
+    global zvPProtossWins
+    winner = replay.winner
+    if "(Zerg)" in str(winner):
+        zvPZergWins += 1
+    else:
+        zvPProtossWins += 1
+
+def determineWinningRaceTvP(replay):
+    global tvPTerranWins
+    global tvPProtossWins
+    winner = replay.winner
+    if "(Terran)" in str(winner):
+        tvPTerranWins += 1
+    else:
+        tvPProtossWins += 1
+
+
+######################################################## initializing some variables
 replayCount = 0
 longestReplay = None
 shortestReplay = None
@@ -114,6 +152,21 @@ totalTime = None
 playersSet = set(())
 loadLevel = 2
 matchups = {'ZvT' : 0, 'ZvP' : 0, 'TvP' : 0, 'TvT' : 0, 'PvP' : 0, 'ZvZ' : 0,}
+zvTMatches = list()
+zvPMatches = list()
+tvPMatches = list()
+zvZMatches = list()
+pvPMatches = list()
+tvTMatches = list()
+zvTZergWins = 0
+zvPZergWins = 0
+zvTTerranWins = 0
+tvPTerranWins = 0
+zvPProtossWins = 0
+tvPProtossWins = 0
+
+
+#################################################################### Start 
 
 folder = setPath()
 fileList = gatherReplayFilePaths(folder)
@@ -128,19 +181,41 @@ for file in fileList:
     currentMatchup = findMatchUp(replay)
     matchups[currentMatchup] += 1
     
-# TODO: Cleanup print statements, probably write results to a file in the future instead
+# TODO: Cleanup print statements, probably write results to a file in the future instead. these prints are a mess
 print(str(replayCount) + ' total replays found and analyzed')
-for key in matchups:
-    print(key + ': ' + str(matchups[key]))
+
 print(str(Path(longestReplay.filename).name) + ' was the longest replay with a length of ' + str(longestReplay.game_length))
 print(str(Path(shortestReplay.filename).name) + ' was the shortest replay with a length of ' + str(shortestReplay.game_length))
 print('Total length of all replays: ' + str(totalTime))
 averageTime = totalTime / replayCount
 print('Average length of replay: ' + str(averageTime))
 
+print('Zerg vs Terran Total Games:' + str(zvTTerranWins + zvTZergWins))
+print('\tZerg wins: ' + str(zvTZergWins))
+print('\tTerran wins: ' + str(zvTTerranWins))
+zvTWinRate = str(round(((zvTZergWins / (zvTTerranWins + zvTZergWins)) * 100), 2))
+print('\tZvT:' + zvTWinRate + '%')
+
+print('Zerg vs Protoss Total Games:' + str(zvPProtossWins + zvPZergWins))
+print('\tZerg wins: ' + str(zvPZergWins))
+print('\tProtoss wins: ' + str(zvPProtossWins))
+zvPWinRate = str(round(((zvPZergWins / (zvPProtossWins + zvPZergWins)) * 100), 2))
+print('\tZvP:' + zvPWinRate + '%')
+
+print('Terran vs Protoss Total Games:' + str(tvPProtossWins + tvPTerranWins))
+print('\tTerran wins: ' + str(tvPTerranWins))
+print('\tProtoss wins: ' + str(tvPProtossWins))
+tvPWinRate = str(round(((tvPTerranWins / (tvPTerranWins + tvPProtossWins)) * 100), 2))
+print('\tTvP:' + zvTWinRate + '%')
+
+print('Terran vs Terran Total Games: ' + str(len(tvTMatches)))
+print('Zerg vs Zerg Total Games: ' + str(len(zvZMatches)))
+print('Protoss vs Protoss Total Games: ' + str(len(pvPMatches)))
+
+
 print('\nGOODBYE')
 
-# TODO: Add a lot more insightful analysis (matchup win rates, player win rates, workers built, map data, etc...)
+# TODO: Add a lot more insightful analysis (matchup win rates(done), player win rates, workers built, map data, etc...)
 # TODO: Add some sort of graphical output to better visualize results (maybe export into Google Sheets or something)
 # TODO: Make program usable by people other than myself and take feedback
 # TODO: Clean up code in general
