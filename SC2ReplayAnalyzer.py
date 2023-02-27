@@ -173,11 +173,12 @@ def getPlayer2(replay):
 # Prints some global stats (total time, average time, etc...)
 def printGlobalReplayStats(replayCount, shortestReplay, longestReplay, totalTime):
     averageTime = totalTime / replayCount
+    averageTime = str(averageTime).split('.')
     print("%s total replays found and analyzed" % replayCount)
     print("%s vs %s on %s was the shortest replay with a length of %s" % (getPlayer1(shortestReplay), getPlayer2(shortestReplay), shortestReplay.map_name, shortestReplay.length))
     print("%s vs %s on %s was the longest replay with a length of %s" % (getPlayer1(longestReplay), getPlayer2(longestReplay), longestReplay.map_name, longestReplay.length))
     print("Total length of all replays: %s" % totalTime)
-    print("Average length of replay: %s" % averageTime)
+    print("Average length of replay: %s" % averageTime[0])
 
 # Prints Zerg vs Terran Stats
 def printZvTStats(zvTmatches, zvTZergWins, zvTTerranWins, zvTshortestReplay, zvTlongestReplay, zvTtotalTime):
@@ -187,10 +188,11 @@ def printZvTStats(zvTmatches, zvTZergWins, zvTTerranWins, zvTshortestReplay, zvT
     print("\tTerran Map Wins: %s" % zvTTerranWins)
     print("\tZvT: %s%%" % zvTWinRate)
     averageTime = zvTtotalTime / len(zvTMatches)
+    averageTime = str(averageTime).split('.')
     print("\t%s vs %s on %s was the shortest ZvT replay with a length of %s" % (getPlayer1(zvTshortestReplay), getPlayer2(zvTshortestReplay), zvTshortestReplay.map_name, zvTshortestReplay.length))
     print("\t%s vs %s on %s was the longest ZvT replay with a length of %s" % (getPlayer1(zvTlongestReplay), getPlayer2(zvTlongestReplay), zvTlongestReplay.map_name, zvTlongestReplay.length))
     print("\tTotal length of ZvT replays: %s" % zvTtotalTime)
-    print("\tAverage length of ZvT replay: %s" % averageTime)
+    print("\tAverage length of ZvT replay: %s" % averageTime[0])
     print('')
 
 # Prints Zerg vs Protoss Stats
@@ -215,41 +217,69 @@ def printTvPStats(tvPMatches, tvPTerranWins, tvPProtossWins, tvPshortestReplay, 
     print("\tProtoss Map Wins: %s" % tvPProtossWins)
     print("\tTvP: %s%%" % tvPWinRate)
     averageTime = tvPtotalTime / len(zvPMatches)
+    averageTime = str(averageTime).split('.')
     print("\t%s vs %s on %s was the shortest TvP replay with a length of %s" % (getPlayer1(tvPshortestReplay), getPlayer2(tvPshortestReplay), tvPshortestReplay.map_name, tvPshortestReplay.length))
     print("\t%s vs %s on %s was the longest TvP replay with a length of %s" % (getPlayer1(tvPlongestReplay), getPlayer2(tvPlongestReplay), tvPlongestReplay.map_name, tvPlongestReplay.length))
     print("\tTotal length of TvP replays: %s" % tvPtotalTime)
-    print("\tAverage length of TvP replay: %s" % averageTime)
+    print("\tAverage length of TvP replay: %s" % averageTime[0])
     print('')
     
 # Prints Zerg vs Zerg Stats
 def printZvZStats(zvZMatches, zvZshortestReplay, zvZlongestReplay, zvZtotalTime):
     print("Zerg vs Zerg Total Games: %s" % len(zvZMatches))
     averageTime = zvZtotalTime / len(zvZMatches)
+    averageTime = str(averageTime).split('.')
     print("\t%s vs %s on %s was the shortest ZvZ replay with a length of %s" % (getPlayer1(zvZshortestReplay), getPlayer2(zvZshortestReplay), zvZshortestReplay.map_name, zvZshortestReplay.length))
     print("\t%s vs %s on %s was the longest ZvZ replay with a length of %s" % (getPlayer1(zvZlongestReplay), getPlayer2(zvZlongestReplay), zvZlongestReplay.map_name, zvZlongestReplay.length))
     print("\tTotal length of ZvZ replays: %s" % zvZtotalTime)
-    print("\tAverage length of ZvZ replay: %s" % averageTime)
+    print("\tAverage length of ZvZ replay: %s" % averageTime[0])
     print('')
 
 # Prints Terran vs Terran Stats
 def printTvTStats(tvTMatches, tvTshortestReplay, tvTlongestReplay, tvTtotalTime):
     print("Terran vs Terran Total Games: %s" % len(tvTMatches))
     averageTime = tvTtotalTime / len(tvTMatches)
+    averageTime = str(averageTime).split('.')
     print("\t%s vs %s on %s was the shortest TvT replay with a length of %s" % (getPlayer1(tvTshortestReplay), getPlayer2(tvTshortestReplay), tvTshortestReplay.map_name, tvTshortestReplay.length))
     print("\t%s vs %s on %s was the longest TvT replay with a length of %s" % (getPlayer1(tvTlongestReplay), getPlayer2(tvTlongestReplay), tvTlongestReplay.map_name, tvTlongestReplay.length))
     print("\tTotal length of TvT replays: %s" % tvTtotalTime)
-    print("\tAverage length of TvT replay: %s" % averageTime)
+    print("\tAverage length of TvT replay: %s" % averageTime[0])
     print('')
 
 # Prints Protoss vs Protoss Stats
 def printPvPStats(pvPMatches, pvPshortestReplay, pvPlongestReplay, pvPtotalTime):
     print("Protoss vs Protoss Total Games: %s" % len(pvPMatches))
     averageTime = pvPtotalTime / len(pvPMatches)
+    averageTime = str(averageTime).split('.')
     print("\t%s vs %s on %s was the shortest PvPreplay with a length of %s" % (getPlayer1(pvPshortestReplay), getPlayer2(pvPshortestReplay), pvPshortestReplay.map_name, pvPshortestReplay.length))
     print("\t%s vs %s on %s was the longest PvP replay with a length of %s" % (getPlayer1(pvPlongestReplay), getPlayer2(pvPlongestReplay), pvPlongestReplay.map_name, pvPlongestReplay.length))
     print("\tTotal length of PvP replays: %s" % pvPtotalTime)
-    print("\tAverage length of PvP replay: %s" % averageTime)
+    print("\tAverage length of PvP replay: %s" % averageTime[0])
     print('')
+
+# Returns the average length of a game for a certain map
+def getMapAverageLength(mapList):
+    mapTotalTime = None
+    for replay in mapList:
+        mapTotalTime = sumTotalTime(mapTotalTime, replay)
+    mapAverageTime = mapTotalTime / len(mapList)
+    return mapAverageTime
+
+# Returns the total length of all games played on a certain map
+def getMapTotalLength(mapList):
+    mapTotalTime = None
+    for replay in mapList:
+        mapTotalTime = sumTotalTime(mapTotalTime, replay)
+    return mapTotalTime
+
+# Print map data
+def printMapData(mapDict):
+    for mapList in mapDict:
+        tempAverageTime = getMapAverageLength(mapDict[mapList])
+        tempAverageTime = str(tempAverageTime).split('.')
+        tempTotalTime = getMapTotalLength(mapDict[mapList])
+        print("%s\n\tGames Played: %s\n\tTotal Time: %s\n\tAverage Time: %s\n" % (mapList, len(mapDict[mapList]), tempTotalTime, tempAverageTime[0]))
+
     
 ######################################################## initializing some variables
 replayCount = 0
@@ -262,6 +292,7 @@ tvPMatches = list()
 zvZMatches = list()
 pvPMatches = list()
 tvTMatches = list()
+mapDict = {}
 zvTZergWins = 0
 zvPZergWins = 0
 zvTTerranWins = 0
@@ -291,12 +322,14 @@ longestReplay = None
 shortestReplay = None
 totalTime = None
 
+
+
 #################################################################### Start 
 folder = setPath()
 fileList = gatherReplayFilePaths(folder)
 
 # Main loop
-if len(fileList) > 1:
+if len(fileList) > 0:
     for file in fileList:
         replay = loadReplay(file, loadLevel)
         if len(replay.players) == 2:
@@ -306,6 +339,16 @@ if len(fileList) > 1:
             totalTime = sumTotalTime(totalTime, replay)
             currentMatchup = findMatchUp(replay)
             matchups[currentMatchup] += 1
+            
+            # adds replay to a list in the mapDic
+            if replay.map_name in mapDict:
+                mapDict[replay.map_name].append(replay)
+            else:
+                tempList = list()
+                mapDict[replay.map_name] = tempList
+                mapDict[replay.map_name].append(replay)
+                
+            
             
     # Gathering more ZvT data
     for replay in zvTMatches:
@@ -344,6 +387,7 @@ if len(fileList) > 1:
         pvPtotalTime = sumTotalTime(pvPtotalTime, replay)
 
     # Printing all the stuff
+    printMapData(mapDict)
     printZvTStats(zvTMatches, zvTZergWins, zvTTerranWins, zvTshortestReplay, zvTlongestReplay, zvTtotalTime)
     printZvPStats(zvPMatches, zvPZergWins, zvPProtossWins, zvPshortestReplay, zvPlongestReplay, zvPtotalTime)
     printTvPStats(tvPMatches, tvPTerranWins, tvPProtossWins, tvPshortestReplay, tvPlongestReplay, tvPtotalTime)
