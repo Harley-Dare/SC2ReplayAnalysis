@@ -180,41 +180,79 @@ def printGlobalReplayStats(replayCount, shortestReplay, longestReplay, totalTime
     print("Average length of replay: %s" % averageTime)
 
 # Prints Zerg vs Terran Stats
-def printZvTStats(zvTmatches, zvTZergWins, zvTTerranWins):
+def printZvTStats(zvTmatches, zvTZergWins, zvTTerranWins, zvTshortestReplay, zvTlongestReplay, zvTtotalTime):
     zvTWinRate = str(round(((zvTZergWins / (len(zvTMatches))) * 100), 2))
     print("Zerg vs Terran Total Games: %s" % len(zvTMatches))
     print("\tZerg Map Wins: %s" % zvTZergWins)
     print("\tTerran Map Wins: %s" % zvTTerranWins)
     print("\tZvT: %s%%" % zvTWinRate)
+    averageTime = zvTtotalTime / len(zvTMatches)
+    print("\t%s vs %s on %s was the shortest ZvT replay with a length of %s" % (getPlayer1(zvTshortestReplay), getPlayer2(zvTshortestReplay), zvTshortestReplay.map_name, zvTshortestReplay.length))
+    print("\t%s vs %s on %s was the longest ZvT replay with a length of %s" % (getPlayer1(zvTlongestReplay), getPlayer2(zvTlongestReplay), zvTlongestReplay.map_name, zvTlongestReplay.length))
+    print("\tTotal length of ZvT replays: %s" % zvTtotalTime)
+    print("\tAverage length of ZvT replay: %s" % averageTime)
+    print('')
 
 # Prints Zerg vs Protoss Stats
-def printZvPStats(zvPMatches, zvPZergWins, zvPProtossWins):
+def printZvPStats(zvPMatches, zvPZergWins, zvPProtossWins, zvPshortestReplay, zvPlongestReplay, zvPtotalTime):
     zvPWinRate = str(round(((zvPZergWins / (len(zvPMatches))) * 100), 2))
     print("Zerg vs Protoss Total Games: %s" % len(zvPMatches))
     print("\tZerg Map Wins: %s" % zvPZergWins)
     print("\tProtoss Map Wins: %s" % zvPProtossWins)
     print("\tZvP: %s%%" % zvPWinRate)
+    averageTime = zvPtotalTime / len(zvPMatches)
+    print("\t%s vs %s on %s was the shortest ZvP replay with a length of %s" % (getPlayer1(zvPshortestReplay), getPlayer2(zvPshortestReplay), zvPshortestReplay.map_name, zvPshortestReplay.length))
+    print("\t%s vs %s on %s was the longest ZvP replay with a length of %s" % (getPlayer1(zvPlongestReplay), getPlayer2(zvPlongestReplay), zvPlongestReplay.map_name, zvPlongestReplay.length))
+    print("\tTotal length of ZvP replays: %s" % zvPtotalTime)
+    print("\tAverage length of ZvP replay: %s" % averageTime)
+    print('')
     
 # Prints Terran vs Protoss Stats
-def printTvPStats(tvPMatches, tvPTerranWins, tvPProtossWins):
+def printTvPStats(tvPMatches, tvPTerranWins, tvPProtossWins, tvPshortestReplay, tvPlongestReplay, tvPtotalTime):
     tvPWinRate = str(round(((tvPTerranWins / (len(tvPMatches))) * 100), 2))
     print("Terran vs Protoss Total Games: %s" % len(tvPMatches))
     print("\tTerran Map Wins: %s" % tvPTerranWins)
     print("\tProtoss Map Wins: %s" % tvPProtossWins)
     print("\tTvP: %s%%" % tvPWinRate)
+    averageTime = tvPtotalTime / len(zvPMatches)
+    print("\t%s vs %s on %s was the shortest TvP replay with a length of %s" % (getPlayer1(tvPshortestReplay), getPlayer2(tvPshortestReplay), tvPshortestReplay.map_name, tvPshortestReplay.length))
+    print("\t%s vs %s on %s was the longest TvP replay with a length of %s" % (getPlayer1(tvPlongestReplay), getPlayer2(tvPlongestReplay), tvPlongestReplay.map_name, tvPlongestReplay.length))
+    print("\tTotal length of TvP replays: %s" % tvPtotalTime)
+    print("\tAverage length of TvP replay: %s" % averageTime)
+    print('')
     
-# Prints mirror matchup info
-def printMirrorMatchUps(tvTMatches, zvZMatches, pvPMatches):
-    print('Terran vs Terran Total Games: ' + str(len(tvTMatches)))
-    print('Zerg vs Zerg Total Games: ' + str(len(zvZMatches)))
-    print('Protoss vs Protoss Total Games: ' + str(len(pvPMatches)))
+# Prints Zerg vs Zerg Stats
+def printZvZStats(zvZMatches, zvZshortestReplay, zvZlongestReplay, zvZtotalTime):
+    print("Zerg vs Zerg Total Games: %s" % len(zvZMatches))
+    averageTime = zvZtotalTime / len(zvZMatches)
+    print("\t%s vs %s on %s was the shortest ZvZ replay with a length of %s" % (getPlayer1(zvZshortestReplay), getPlayer2(zvZshortestReplay), zvZshortestReplay.map_name, zvZshortestReplay.length))
+    print("\t%s vs %s on %s was the longest ZvZ replay with a length of %s" % (getPlayer1(zvZlongestReplay), getPlayer2(zvZlongestReplay), zvZlongestReplay.map_name, zvZlongestReplay.length))
+    print("\tTotal length of ZvZ replays: %s" % zvZtotalTime)
+    print("\tAverage length of ZvZ replay: %s" % averageTime)
+    print('')
 
+# Prints Terran vs Terran Stats
+def printTvTStats(tvTMatches, tvTshortestReplay, tvTlongestReplay, tvTtotalTime):
+    print("Terran vs Terran Total Games: %s" % len(tvTMatches))
+    averageTime = tvTtotalTime / len(tvTMatches)
+    print("\t%s vs %s on %s was the shortest TvT replay with a length of %s" % (getPlayer1(tvTshortestReplay), getPlayer2(tvTshortestReplay), tvTshortestReplay.map_name, tvTshortestReplay.length))
+    print("\t%s vs %s on %s was the longest TvT replay with a length of %s" % (getPlayer1(tvTlongestReplay), getPlayer2(tvTlongestReplay), tvTlongestReplay.map_name, tvTlongestReplay.length))
+    print("\tTotal length of TvT replays: %s" % tvTtotalTime)
+    print("\tAverage length of TvT replay: %s" % averageTime)
+    print('')
 
+# Prints Protoss vs Protoss Stats
+def printPvPStats(pvPMatches, pvPshortestReplay, pvPlongestReplay, pvPtotalTime):
+    print("Protoss vs Protoss Total Games: %s" % len(pvPMatches))
+    averageTime = pvPtotalTime / len(pvPMatches)
+    print("\t%s vs %s on %s was the shortest PvPreplay with a length of %s" % (getPlayer1(pvPshortestReplay), getPlayer2(pvPshortestReplay), pvPshortestReplay.map_name, pvPshortestReplay.length))
+    print("\t%s vs %s on %s was the longest PvP replay with a length of %s" % (getPlayer1(pvPlongestReplay), getPlayer2(pvPlongestReplay), pvPlongestReplay.map_name, pvPlongestReplay.length))
+    print("\tTotal length of PvP replays: %s" % pvPtotalTime)
+    print("\tAverage length of PvP replay: %s" % averageTime)
+    print('')
+    
 ######################################################## initializing some variables
 replayCount = 0
-longestReplay = None
-shortestReplay = None
-totalTime = None
 playersSet = set(())
 loadLevel = 2
 matchups = {'ZvT' : 0, 'ZvP' : 0, 'TvP' : 0, 'TvT' : 0, 'PvP' : 0, 'ZvZ' : 0,}
@@ -231,32 +269,91 @@ tvPTerranWins = 0
 zvPProtossWins = 0
 tvPProtossWins = 0
 drawGames = 0
+zvTlongestReplay = None
+zvTshortestReplay = None
+zvTtotalTime = None
+zvPlongestReplay = None
+zvPshortestReplay = None
+zvPtotalTime = None
+tvPlongestReplay = None
+tvPshortestReplay = None
+tvPtotalTime = None
+tvTlongestReplay = None
+tvTshortestReplay = None
+tvTtotalTime = None
+pvPlongestReplay = None
+pvPshortestReplay = None
+pvPtotalTime = None
+zvZlongestReplay = None
+zvZshortestReplay = None
+zvZtotalTime = None
+longestReplay = None
+shortestReplay = None
+totalTime = None
 
 #################################################################### Start 
 folder = setPath()
 fileList = gatherReplayFilePaths(folder)
 
 # Main loop
-for file in fileList:
-    replay = loadReplay(file, loadLevel)
-    if len(replay.players) == 2:
-        replayCount = incrementReplayCount(replayCount)
-        longestReplay = findLongestReplay(longestReplay, replay)
-        shortestReplay = findShortestReplay(shortestReplay, replay)
-        totalTime = sumTotalTime(totalTime, replay)
-        currentMatchup = findMatchUp(replay)
-        matchups[currentMatchup] += 1
+if len(fileList) > 1:
+    for file in fileList:
+        replay = loadReplay(file, loadLevel)
+        if len(replay.players) == 2:
+            replayCount = incrementReplayCount(replayCount)
+            longestReplay = findLongestReplay(longestReplay, replay)
+            shortestReplay = findShortestReplay(shortestReplay, replay)
+            totalTime = sumTotalTime(totalTime, replay)
+            currentMatchup = findMatchUp(replay)
+            matchups[currentMatchup] += 1
+            
+    # Gathering more ZvT data
+    for replay in zvTMatches:
+        zvTlongestReplay = findLongestReplay(zvTlongestReplay, replay)
+        zvTshortestReplay = findShortestReplay(zvTshortestReplay, replay)
+        zvTtotalTime = sumTotalTime(zvTtotalTime, replay)
+        
+    # Gathering more ZvP data
+    for replay in zvPMatches:
+        zvPlongestReplay = findLongestReplay(zvPlongestReplay, replay)
+        zvPshortestReplay = findShortestReplay(zvPshortestReplay, replay)
+        zvPtotalTime = sumTotalTime(zvPtotalTime, replay)
 
+    # Gathering more TvP data
+    for replay in tvPMatches:
+        tvPlongestReplay = findLongestReplay(tvPlongestReplay, replay)
+        tvPshortestReplay = findShortestReplay(tvPshortestReplay, replay)
+        tvPtotalTime = sumTotalTime(tvPtotalTime, replay)
+    
+    # Gathering more ZvZ data
+    for replay in zvZMatches:
+        zvZlongestReplay = findLongestReplay(zvZlongestReplay, replay)
+        zvZshortestReplay = findShortestReplay(zvZshortestReplay, replay)
+        zvZtotalTime = sumTotalTime(zvZtotalTime, replay)
+    
+    # Gathering more TvT data
+    for replay in tvTMatches:
+        tvTlongestReplay = findLongestReplay(tvTlongestReplay, replay)
+        tvTshortestReplay = findShortestReplay(tvTshortestReplay, replay)
+        tvTtotalTime = sumTotalTime(tvTtotalTime, replay)
+    
+    # Gathering more PvP data
+    for replay in pvPMatches:
+        pvPlongestReplay = findLongestReplay(pvPlongestReplay, replay)
+        pvPshortestReplay = findShortestReplay(pvPshortestReplay, replay)
+        pvPtotalTime = sumTotalTime(pvPtotalTime, replay)
 
-# TODO: Cleanup print statements, probably write results to a file in the future instead. these prints are a mess
-printGlobalReplayStats(replayCount, shortestReplay, longestReplay, totalTime)
-printZvTStats(zvTMatches, zvTZergWins, zvTTerranWins)
-printZvPStats(zvPMatches, zvPZergWins, zvPProtossWins)
-printTvPStats(tvPMatches, tvPTerranWins, tvPProtossWins)
-printMirrorMatchUps(tvTMatches, zvZMatches, pvPMatches)
-
-print('Draw games: ' + str(drawGames))
-
+    # Printing all the stuff
+    printZvTStats(zvTMatches, zvTZergWins, zvTTerranWins, zvTshortestReplay, zvTlongestReplay, zvTtotalTime)
+    printZvPStats(zvPMatches, zvPZergWins, zvPProtossWins, zvPshortestReplay, zvPlongestReplay, zvPtotalTime)
+    printTvPStats(tvPMatches, tvPTerranWins, tvPProtossWins, tvPshortestReplay, tvPlongestReplay, tvPtotalTime)
+    printZvZStats(zvZMatches, zvZshortestReplay, zvZlongestReplay, zvZtotalTime)
+    printTvTStats(tvTMatches, tvTshortestReplay, tvTlongestReplay, tvTtotalTime)
+    printPvPStats(pvPMatches, pvPshortestReplay, pvPlongestReplay, pvPtotalTime)
+    printGlobalReplayStats(replayCount, shortestReplay, longestReplay, totalTime)
+    print('Draw games: ' + str(drawGames))
+else:
+    print('No replays in directory')
 
 print('\nGOODBYE')
 
@@ -265,3 +362,7 @@ print('\nGOODBYE')
 # TODO: Make program usable by people other than myself and take feedback
 # TODO: Add in a team replay to my replay folder and see if ruins everything
 # TODO: Clean up code in general
+# TODO: Add try/exceptions 
+# TODO: Add unit tests
+# TODO: Cleanup print statements, probably write results to a file in the future instead. these prints are a mess
+# TODO: Make time printouts look neater
