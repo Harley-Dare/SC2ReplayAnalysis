@@ -92,71 +92,102 @@ def findMatchUp(replay):
         
     return matchup
 
-# Takes two race inputs and returns the matchup. Adds replay to matchup specific list
+# Takes two race inputs and returns the matchup. 
 def defineMatchup(firstRace, secondRace, replay):
     if (firstRace == "Zerg" and secondRace == "Terran") or (firstRace == "Terran" and secondRace == "Zerg"):
-        zvTMatches.append(replay)
-        determineWinningRaceZvT(replay)
         return "ZvT"
     if (firstRace == "Zerg" and secondRace == "Protoss") or (firstRace == "Protoss" and secondRace == "Zerg"):
-        zvPMatches.append(replay)
-        determineWinningRaceZvP(replay)
         return "ZvP"
     if (firstRace == "Terran" and secondRace == "Protoss") or (firstRace == "Protoss" and secondRace == "Terran"):
-        tvPMatches.append(replay)
-        determineWinningRaceTvP(replay)
         return "TvP"
     if (firstRace == "Terran" and secondRace == "Terran"):
-        tvTMatches.append(replay)
         return "TvT"
     if (firstRace == "Protoss" and secondRace == "Protoss"):
-        pvPMatches.append(replay)
         return "PvP"
     if (firstRace == "Zerg" and secondRace == "Zerg"):
-        zvZMatches.append(replay)
         return "ZvZ"
+
+#
     
-# Finds the winning race and increments either the Zerg or Terran wins in ZvT (or draw)
+# Add replay to matchup specific list
+def appendMatchupSpecificList(replay, matchup):
+    if matchup == "ZvT":
+        zvTMatches.append(replay)
+    elif matchup == "ZvP":
+        zvPMatches.append(replay)
+    elif matchup == "TvP":
+        tvPMatches.append(replay)
+    elif matchup == "ZvZ":
+        zvZMatches.append(replay)
+    elif matchup == "TvT":
+        tvTMatches.append(replay)
+    elif matchup == "PvP":
+        pvPMatches.append(replay)
+    
+# Finds the winning race in ZvT (or draw) and returns that race as a string
 def determineWinningRaceZvT(replay):
-    global zvTZergWins
-    global zvTTerranWins
-    global drawGames
-    
     winner = replay.winner
     if "(Zerg)" in str(winner):
-        zvTZergWins += 1
+        return "(Zerg)"
     elif "(Terran)" in str(winner):
-        zvTTerranWins += 1
+        return "(Terran)"
     else:
-        drawGames += 1
+        return "Draw Game"
 
-# Finds the winning race and increments either the Zerg or Terran wins in ZvT (or draw)
+# Finds the winning race in ZvP (or draw) and returns that race as a string
 def determineWinningRaceZvP(replay):
+    winner = replay.winner
+    if "(Zerg)" in str(winner):
+        return "(Zerg)"
+    elif "(Protoss)" in str(winner):
+        return "(Protoss)"
+    else:
+        return "Draw Game"
+
+# Finds the winning race in TvP (or draw) and returns that race as a string
+def determineWinningRaceTvP(replay):
+    winner = replay.winner
+    if "(Terran)" in str(winner):
+        return "(Terran)"
+    elif "(Protoss)" in str(winner):
+        return "(Protoss)"
+    else:
+        return "Draw Game"
+# Increment total matchup wins
+def incrementMatchUpWins(replay, matchup):
+    global zvTZergWins
+    global zvTTerranWins
+    global tvPTerranWins
+    global tvPProtossWins
     global zvPZergWins
     global zvPProtossWins
     global drawGames
     
-    winner = replay.winner
-    if "(Zerg)" in str(winner):
-        zvPZergWins += 1
-    elif "(Protoss)" in str(winner):
-        zvPProtossWins += 1
-    else:
-        drawGames += 1
-
-# Finds the winning race and increments either the Zerg or Terran wins in ZvT (or draw)
-def determineWinningRaceTvP(replay):
-    global tvPTerranWins
-    global tvPProtossWins
-    global drawGames
-    
-    winner = replay.winner
-    if "(Terran)" in str(winner):
-        tvPTerranWins += 1
-    elif "(Protoss)" in str(winner):
-        tvPProtossWins += 1
-    else:
-        drawGames += 1
+    if matchup == "ZvT":
+        winningRace = determineWinningRaceZvT(replay)
+        if winningRace == "(Zerg)":
+            zvTZergWins += 1
+        elif winningRace == "(Terran)" :
+            zvTTerranWins += 1
+        else:
+            drawGames += 1
+    elif matchup == "ZvP":
+        winningRace = determineWinningRaceZvP(replay)
+        if winningRace == "(Zerg)":
+            zvPZergWins += 1
+        elif winningRace == "(Protoss)" :
+            zvPProtossWins += 1
+        else:
+            drawGames += 1
+    elif matchup == "TvP":
+        winningRace = determineWinningRaceTvP(replay)
+        if winningRace == "(Terran)":
+            tvPTerranWins += 1
+        elif winningRace == "(Protoss)" :
+            tvPProtossWins += 1
+        else:
+            drawGames += 1
+        
 
 # Returns player 1's namne and race
 def getPlayer1(replay):
@@ -272,16 +303,90 @@ def getMapTotalLength(mapList):
         mapTotalTime = sumTotalTime(mapTotalTime, replay)
     return mapTotalTime
 
+# Returns ZvT winrate for a given map
+def getZvTMapWinRate(mapList):
+    global mapSpecificZvTTerranWins
+    global mapSpecificZvTZergWins
+    global mapZvTDraws
+    mapSpecificZvTTerranWins = 0
+    mapSpecificZvTZergWins = 0
+    mapZvTDraws = 0
+    for replay in mapList:
+        matchup = findMatchUp(replay)
+        if matchup == "ZvT":
+            if "(Terran)" in str(replay.winner):
+                mapSpecificZvTTerranWins += 1
+            elif "(Zerg)" in str(replay.winner):
+                mapSpecificZvTZergWins += 1
+    zvTGames = mapSpecificZvTTerranWins + mapSpecificZvTZergWins
+    return mapSpecificZvTZergWins / zvTGames
+
+# Returns ZvP winrate for a given map
+def getZvPMapWinRate(mapList):
+    global mapSpecificZvPProtossWins
+    global mapSpecificZvPZergWins
+    global mapZvPDraws
+    mapSpecificZvPProtossWins = 0
+    mapSpecificZvPZergWins = 0
+    mapZvPDraws = 0
+    
+    for replay in mapList:
+        matchup = findMatchUp(replay)
+        if matchup == "ZvP":
+            if "(Protoss)" in str(replay.winner):
+                mapSpecificZvPProtossWins += 1
+            elif "(Zerg)" in str(replay.winner):
+                mapSpecificZvPZergWins += 1
+            else:
+                mapZvPDraws += 1
+    zvPGames = mapSpecificZvPProtossWins + mapSpecificZvPZergWins
+    return mapSpecificZvPZergWins / zvPGames
+
+# Returns TvP winrate for a given map
+def getTvPMapWinRate(mapList):
+    global mapSpecificTvPProtossWins
+    global mapSpecificTvPTerranWins
+    global mapTvPDraws
+    mapSpecificTvPProtossWins = 0
+    mapSpecificTvPTerranWins = 0
+    mapTvPDraws = 0
+    for replay in mapList:
+        matchup = findMatchUp(replay)
+        if matchup == "TvP":
+            if "(Protoss)" in str(replay.winner):
+                mapSpecificTvPProtossWins += 1
+            elif "(Terran)" in str(replay.winner):
+                mapSpecificTvPTerranWins += 1
+    tvPGames = mapSpecificTvPProtossWins + mapSpecificTvPTerranWins
+    return mapSpecificTvPTerranWins / tvPGames
+
 # Print map data
 def printMapData(mapDict):
     for mapList in mapDict:
         tempAverageTime = getMapAverageLength(mapDict[mapList])
         tempAverageTime = str(tempAverageTime).split('.')
         tempTotalTime = getMapTotalLength(mapDict[mapList])
-        print("%s\n\tGames Played: %s\n\tTotal Time: %s\n\tAverage Time: %s\n" % (mapList, len(mapDict[mapList]), tempTotalTime, tempAverageTime[0]))
+       # zvTWinRate = str(round(((zvTZergWins / (len(zvTMatches))) * 100), 2))
+        zvTWinRate = str(round((getZvTMapWinRate(mapDict[mapList]) * 100), 2)) + "%"
+        zvPWinRate = str(round((getZvPMapWinRate(mapDict[mapList]) * 100), 2)) + "%"
+        tvPWinRate = str(round((getTvPMapWinRate(mapDict[mapList]) * 100), 2)) + "%"
+        print("Map: %s\n\tGames played: %s\n\tTotal time played on this map: %s\n\tAverage game length: %s" % (mapList, len(mapDict[mapList]), tempTotalTime, tempAverageTime[0]))
+        print("\tZvT games: %s\n\t\tZerg wins: %s\n\t\tTerran wins: %s\n\t\tDraw wames: %s\n\t\tZvT winrate: %s" % ((mapSpecificZvTZergWins + mapSpecificZvTTerranWins), mapSpecificZvTZergWins, mapSpecificZvTTerranWins, mapZvTDraws, zvTWinRate))
+        print("\tZvP games: %s\n\t\tZerg wins: %s\n\t\tProtoss wins: %s\n\t\tDraw wames: %s\n\t\tZvP winrate: %s" % ((mapSpecificZvPZergWins + mapSpecificZvPProtossWins), mapSpecificZvPZergWins, mapSpecificZvPProtossWins, mapZvPDraws, zvPWinRate))
+        print("\tTvP games: %s\n\t\tTerran wins: %s\n\t\tProtoss wins: %s\n\t\tDraw Gwmes: %s\n\t\tTvP winrate: %s\n" % ((mapSpecificTvPTerranWins + mapSpecificTvPProtossWins), mapSpecificTvPTerranWins, mapSpecificTvPProtossWins, mapTvPDraws, tvPWinRate))
+
 
     
 ######################################################## initializing some variables
+mapSpecificTvPTerranWins = 0
+mapSpecificTvPProtossWins = 0
+mapSpecificZvTZergWins = 0
+mapSpecificZvTTerranWins = 0
+mapSpecificZvPZergWins = 0
+mapSpecificZvPProtossWins = 0
+mapTvPDraws = 0
+mapZvTDraws = 0
+mapZvPDraws = 0
 replayCount = 0
 playersSet = set(())
 loadLevel = 2
@@ -322,8 +427,6 @@ longestReplay = None
 shortestReplay = None
 totalTime = None
 
-
-
 #################################################################### Start 
 folder = setPath()
 fileList = gatherReplayFilePaths(folder)
@@ -338,6 +441,8 @@ if len(fileList) > 0:
             shortestReplay = findShortestReplay(shortestReplay, replay)
             totalTime = sumTotalTime(totalTime, replay)
             currentMatchup = findMatchUp(replay)
+            appendMatchupSpecificList(replay, currentMatchup)
+            incrementMatchUpWins(replay, currentMatchup)
             matchups[currentMatchup] += 1
             
             # adds replay to a list in the mapDic
@@ -347,9 +452,7 @@ if len(fileList) > 0:
                 tempList = list()
                 mapDict[replay.map_name] = tempList
                 mapDict[replay.map_name].append(replay)
-                
-            
-            
+                       
     # Gathering more ZvT data
     for replay in zvTMatches:
         zvTlongestReplay = findLongestReplay(zvTlongestReplay, replay)
@@ -401,7 +504,7 @@ else:
 
 print('\nGOODBYE')
 
-# TODO: Add a lot more insightful analysis (matchup win rates(done), player win rates, workers built, map data, etc...)
+# TODO: Add a lot more insightful analysis (matchup win rates(done), player stats, workers built, map data(partially done), etc...)
 # TODO: Add some sort of graphical output to better visualize results (maybe export into Google Sheets or something)
 # TODO: Make program usable by people other than myself and take feedback
 # TODO: Add in a team replay to my replay folder and see if ruins everything
