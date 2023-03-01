@@ -360,20 +360,108 @@ def getTvPMapWinRate(mapList):
     tvPGames = mapSpecificTvPProtossWins + mapSpecificTvPTerranWins
     return mapSpecificTvPTerranWins / tvPGames
 
-# Print map data
+# Gets winrates, draws, mirror matchups for a map                Clean this up, way too long and too much global nonsense
+def getMapSpecificWinRates(mapList):
+    global mapSpecificTvPProtossWins
+    global mapSpecificTvPTerranWins
+    global mapTvPDraws
+    global mapSpecificZvPProtossWins
+    global mapSpecificZvPZergWins
+    global mapZvTDraws
+    global mapZvPDraws
+    global mapZvZGames
+    global mapTvTGames
+    global mapPvPGames
+    global mapSpecificZvTZergWins
+    global mapSpecificZvTTerranWins
+    global mapSpecificZvPWinRate
+    global mapSpecificTvPWinRate
+    global mapSpecificZvTWinRate
+    
+    mapSpecificZvPWinRate = 0
+    mapSpecificTvPWinRate = 0
+    mapSpecificZvTWinRate = 0
+    mapSpecificTvPProtossWins = 0
+    mapSpecificTvPTerranWins = 0
+    mapTvPDraws = 0
+    mapSpecificZvPProtossWins = 0
+    mapSpecificZvPZergWins = 0
+    mapZvPDraws = 0
+    mapSpecificZvTZergWins = 0
+    mapSpecificZvTTerranWins = 0
+    mapZvTDraws = 0
+    mapZvZGames = 0
+    mapTvTGames = 0
+    mapPvPGames = 0
+    
+    for replay in mapList:
+        matchup = findMatchUp(replay)
+        if matchup == "TvP":
+            if "(Protoss)" in str(replay.winner):
+                mapSpecificTvPProtossWins += 1
+            elif "(Terran)" in str(replay.winner):
+                mapSpecificTvPTerranWins += 1
+            else:
+                mapTvPDraws += 1
+        elif matchup == "ZvP":
+            if "(Protoss)" in str(replay.winner):
+                mapSpecificZvPProtossWins += 1
+            elif "(Zerg)" in str(replay.winner):
+                mapSpecificZvPZergWins += 1
+            else:
+                mapZvPDraws += 1
+        elif matchup == "ZvT":
+            if "(Terran)" in str(replay.winner):
+                mapSpecificZvTTerranWins += 1
+            elif "(Zerg)" in str(replay.winner):
+                mapSpecificZvTZergWins += 1
+            else:
+                mapZvTDraws += 1
+        elif matchup == "ZvZ":
+            mapZvZGames += 1
+        elif matchup == "PvP":
+            mapPvPGames += 1
+        elif matchup == "TvT":
+            mapTvTGames += 1
+        
+    tvPGames = mapSpecificTvPProtossWins + mapSpecificTvPTerranWins
+    zvTGames = mapSpecificZvTTerranWins + mapSpecificZvTZergWins
+    zvPGames = mapSpecificZvPProtossWins + mapSpecificZvPZergWins
+    if zvPGames > 0:
+        mapSpecificZvPWinRate = str(round(((mapSpecificZvPZergWins / zvPGames) * 100), 2)) + "%"
+    if tvPGames > 0:
+        mapSpecificTvPWinRate = str(round(((mapSpecificTvPTerranWins / tvPGames) * 100), 2)) + "%"
+    if zvTGames > 0:
+        mapSpecificZvTWinRate = str(round(((mapSpecificZvTZergWins / zvTGames) * 100), 2)) + "%"
+    
+
+# Print map data              Clean this up, way too long and too much global nonsense
 def printMapData(mapDict):
+    global mapSpecificZvPWinRate
+    global mapSpecificTvPWinRate
+    global mapSpecificZvTWinRate
+    global mapSpecificTvPProtossWins
+    global mapSpecificTvPTerranWins
+    global mapSpecificZvPProtossWins
+    global mapSpecificZvPZergWins
+    global mapZvPDraws
+    global mapZvTDraws
+    global mapZvZGames
+    global mapTvPDraws
+    global mapTvTGames
+    global mapPvPGames
+    global mapSpecificZvTZergWins
+    global mapSpecificZvTTerranWins
     for mapList in mapDict:
         tempAverageTime = getMapAverageLength(mapDict[mapList])
         tempAverageTime = str(tempAverageTime).split('.')
         tempTotalTime = getMapTotalLength(mapDict[mapList])
-       # zvTWinRate = str(round(((zvTZergWins / (len(zvTMatches))) * 100), 2))
-        zvTWinRate = str(round((getZvTMapWinRate(mapDict[mapList]) * 100), 2)) + "%"
-        zvPWinRate = str(round((getZvPMapWinRate(mapDict[mapList]) * 100), 2)) + "%"
-        tvPWinRate = str(round((getTvPMapWinRate(mapDict[mapList]) * 100), 2)) + "%"
+        getMapSpecificWinRates(mapDict[mapList])
         print("Map: %s\n\tGames played: %s\n\tTotal time played on this map: %s\n\tAverage game length: %s" % (mapList, len(mapDict[mapList]), tempTotalTime, tempAverageTime[0]))
-        print("\tZvT games: %s\n\t\tZerg wins: %s\n\t\tTerran wins: %s\n\t\tDraw wames: %s\n\t\tZvT winrate: %s" % ((mapSpecificZvTZergWins + mapSpecificZvTTerranWins), mapSpecificZvTZergWins, mapSpecificZvTTerranWins, mapZvTDraws, zvTWinRate))
-        print("\tZvP games: %s\n\t\tZerg wins: %s\n\t\tProtoss wins: %s\n\t\tDraw wames: %s\n\t\tZvP winrate: %s" % ((mapSpecificZvPZergWins + mapSpecificZvPProtossWins), mapSpecificZvPZergWins, mapSpecificZvPProtossWins, mapZvPDraws, zvPWinRate))
-        print("\tTvP games: %s\n\t\tTerran wins: %s\n\t\tProtoss wins: %s\n\t\tDraw Gwmes: %s\n\t\tTvP winrate: %s\n" % ((mapSpecificTvPTerranWins + mapSpecificTvPProtossWins), mapSpecificTvPTerranWins, mapSpecificTvPProtossWins, mapTvPDraws, tvPWinRate))
+        print("\tZvT games: %s\n\t\tZerg wins: %s\n\t\tTerran wins: %s\n\t\tZvT winrate: %s\n\t\tZvT Draw games: %s" % ((mapSpecificZvTZergWins + mapSpecificZvTTerranWins), mapSpecificZvTZergWins, mapSpecificZvTTerranWins, mapSpecificZvTWinRate, mapZvTDraws))
+        print("\tZvP games: %s\n\t\tZerg wins: %s\n\t\tProtoss wins: %s\n\t\tZvP winrate: %s\n\t\tZvP Draw games: %s" % ((mapSpecificZvPZergWins + mapSpecificZvPProtossWins), mapSpecificZvPZergWins, mapSpecificZvPProtossWins, mapSpecificZvPWinRate, mapZvPDraws))
+        print("\tTvP games: %s\n\t\tTerran wins: %s\n\t\tProtoss wins: %s\n\t\tTvP winrate: %s\n\t\tTvP Draw games: %s" % ((mapSpecificTvPTerranWins + mapSpecificTvPProtossWins), mapSpecificTvPTerranWins, mapSpecificTvPProtossWins, mapSpecificTvPWinRate, mapTvPDraws))
+        print("\tZvZ games: %s\n\tTvT games: %s\n\tPvP games: %s\n" % (mapZvZGames, mapTvTGames, mapPvPGames))
 
 
     
@@ -384,6 +472,12 @@ mapSpecificZvTZergWins = 0
 mapSpecificZvTTerranWins = 0
 mapSpecificZvPZergWins = 0
 mapSpecificZvPProtossWins = 0
+mapSpecificZvPWinRate = 0
+mapSpecificTvPWinRate = 0
+mapSpecificZvTWinRate = 0
+mapZvZGames = 0
+mapTvTGames = 0
+mapPvPGames = 0
 mapTvPDraws = 0
 mapZvTDraws = 0
 mapZvPDraws = 0
@@ -490,10 +584,10 @@ if len(fileList) > 0:
         pvPtotalTime = sumTotalTime(pvPtotalTime, replay)
 
     # Printing all the stuff
-    printMapData(mapDict)
     printZvTStats(zvTMatches, zvTZergWins, zvTTerranWins, zvTshortestReplay, zvTlongestReplay, zvTtotalTime)
     printZvPStats(zvPMatches, zvPZergWins, zvPProtossWins, zvPshortestReplay, zvPlongestReplay, zvPtotalTime)
     printTvPStats(tvPMatches, tvPTerranWins, tvPProtossWins, tvPshortestReplay, tvPlongestReplay, tvPtotalTime)
+    printMapData(mapDict)
     printZvZStats(zvZMatches, zvZshortestReplay, zvZlongestReplay, zvZtotalTime)
     printTvTStats(tvTMatches, tvTshortestReplay, tvTlongestReplay, tvTtotalTime)
     printPvPStats(pvPMatches, pvPshortestReplay, pvPlongestReplay, pvPtotalTime)
@@ -504,7 +598,7 @@ else:
 
 print('\nGOODBYE')
 
-# TODO: Add a lot more insightful analysis (matchup win rates(done), player stats, workers built, map data(partially done), etc...)
+# TODO: Add a lot more insightful analysis (matchup win rates(done), player stats, workers built, map data(sort of done), etc...)
 # TODO: Add some sort of graphical output to better visualize results (maybe export into Google Sheets or something)
 # TODO: Make program usable by people other than myself and take feedback
 # TODO: Add in a team replay to my replay folder and see if ruins everything
